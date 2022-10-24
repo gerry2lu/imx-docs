@@ -36,12 +36,48 @@ Enabling users to transfer assets requires a user's signature, so your applicati
 ### 3. Deposit assets onto L2
 <Tabs>
   <TabItem value="typescript" label="Typescript Core SDK">
-    Add description, if required.
+    The function below will deposit ETH from L1 to L2. If you wish to deposit a different asset, you can change 'type' to either 'ERC20' or 'ERC721' and specify the asset address as an additional parameter.
     <br/><br/>
 
 ```ts
-// Add code
+(async(): Promise<void> => {
+    // Create deposit
+    const deposit = await client.deposit(ethSigner, {
+        //ethSigner obtained from generating signer
+
+        type: 'ETH', // There are three avaible types: ETH, ERC20, ERC721
+        amount: '50000000000000000', //Amount in wei, this currently is 0.05 ETH
+    });
+    // console.log(deposit); // Uncomment to see the deposit object
+
+})().catch(e => {
+    log.error(component, e);
+});
 ```
+### Example response
+```ts
+{
+  type: 2, // Transaction type, currently 2 means EIP-1559
+  chainId: 5, // The Chain ID of the network, 5 is the Chain ID for Goerli.
+  nonce: 5, // The nonce of the transaction used 
+  maxPriorityFeePerGas: BigNumber { _hex: '0x59682f00', _isBigNumber: true }, // Maximum fee to bribe miners into giving this transaction priority
+  maxFeePerGas: BigNumber { _hex: '0x5968cf94', _isBigNumber: true }, // The maximum fee per gas that the sender is willing to pay
+  gasPrice: null, // The gas price of the transaction determined by the network
+  gasLimit: BigNumber { _hex: '0x013617', _isBigNumber: true }, // The maximum amount of gas that the transaction can use
+  to: '0x7917eDb51ecD6CdB3F9854c3cc593F33de10c623', // The address of the recipient
+  value: BigNumber { _hex: '0xb1a2bc2ec50000', _isBigNumber: true }, // The amount of ETH to send in wei
+  data: '0x00aeef8a02f9a87a2eae83e024312ea33e2bec5df10cdef1470f6aaf5d5adb23f735a60002705737cd248ac819034b5de474c8f0368224f72a0fda9e031499d519992d9e000000000000000000000000000000000000000000000000000000000001ed7a', // Data included in this log
+  accessList: [], // Optional list of addresses and storage keys the transaction can access
+  hash: '0x357d6e1c09cf09b5746279bb77377b2353deb1c538eb18c8c9fa9e2363aa3d58', // The hash of the transaction
+  v: 0, // The recovery ID of the ECDSA signature
+  r: '0xc02c07ff0f80405f34917c9e300abff5da7dda319828fe1843a06f041cd3cbf5', // The first 32 bytes of the ECDSA signature
+  s: '0x5c08b76a9ab9f766b82e6f273a1503d064d1604b8e071d7267a6735c5900bb1c', // The second 32 bytes of the ECDSA signature
+  from: '0xF656956cA54778056f1191791876db54Aa6eb61B', // The address of the sender
+  confirmations: 0, // The number of confirmations that the transaction has received
+  wait: [Function (anonymous)] // A function that returns a promise that resolves when the transaction is mined
+}
+```
+
   </TabItem>
   <TabItem value="kotlin" label="Kotlin (JVM) Core SDK">
     Add description, if required.
